@@ -760,9 +760,11 @@ public class F8OpenShiftAdapter extends AbstractOpenShiftAdapter {
 
     private void cleanDeployments(Map<String, String> labels) throws Exception {
         final ReplicationControllerList rcs = client.replicationControllers().inNamespace(configuration.getNamespace()).withLabels(labels).list();
+        System.out.println("XUXA inside cleanDeployments - list = " + rcs);
         try {
             for (ReplicationController rc : rcs.getItems()) {
                 String rcId = KubernetesHelper.getName(rc);
+                System.out.println("\tXUXA item " + rcId);
                 client.replicationControllers().inNamespace(configuration.getNamespace()).withName(rcId).scale(0, true);
                 boolean exists = client.replicationControllers().inNamespace(configuration.getNamespace()).withName(rcId).delete();
                 log.info(String.format("ReplicationController [%s] delete: %s.", rcId, exists));
